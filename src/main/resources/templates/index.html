@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Resume Builder</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background: #f3f6fb;
+            color: #1f2937;
+        }
+
+        main {
+            width: min(980px, calc(100% - 32px));
+            margin: 0 auto;
+            padding: 40px 0;
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            font-size: 32px;
+        }
+
+        p {
+            margin: 0 0 28px;
+            color: #5b6472;
+        }
+
+        form {
+            display: grid;
+            gap: 18px;
+            padding: 28px;
+            border: 1px solid #d9e0ea;
+            border-radius: 8px;
+            background: #ffffff;
+            box-shadow: 0 12px 30px rgba(31, 41, 55, 0.08);
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        label,
+        .field {
+            display: grid;
+            gap: 8px;
+            font-weight: 700;
+        }
+
+        input,
+        select,
+        .editor {
+            width: 100%;
+            border: 1px solid #cfd7e3;
+            border-radius: 6px;
+            padding: 12px 14px;
+            font: inherit;
+            color: #111827;
+            background: #ffffff;
+        }
+
+        select {
+            appearance: auto;
+        }
+
+        .editor {
+            min-height: 116px;
+            font-weight: 400;
+            line-height: 1.45;
+            outline: none;
+            overflow-wrap: anywhere;
+        }
+
+        .editor:focus,
+        input:focus,
+        select:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
+        }
+
+        .editor:empty::before {
+            content: attr(data-placeholder);
+            color: #8b95a5;
+        }
+
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            padding: 8px;
+            border: 1px solid #d9e0ea;
+            border-radius: 6px;
+            background: #f8fafc;
+        }
+
+        .tool-button {
+            display: inline-grid;
+            place-items: center;
+            min-width: 34px;
+            height: 32px;
+            border: 1px solid #cfd7e3;
+            border-radius: 5px;
+            padding: 0 9px;
+            font: inherit;
+            font-weight: 700;
+            color: #1f2937;
+            background: #ffffff;
+            cursor: pointer;
+        }
+
+        .tool-button:hover {
+            background: #eaf1ff;
+            border-color: #9bb7ef;
+        }
+
+        .submit-button {
+            justify-self: start;
+            border: 0;
+            border-radius: 6px;
+            padding: 13px 20px;
+            font: inherit;
+            font-weight: 700;
+            color: #ffffff;
+            background: #2563eb;
+            cursor: pointer;
+        }
+
+        .submit-button:hover {
+            background: #1d4ed8;
+        }
+
+        @media (max-width: 720px) {
+            .row {
+                grid-template-columns: 1fr;
+            }
+
+            form {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+<main>
+    <h1>Resume Builder</h1>
+    <p>Enter your details, choose an ATS-friendly template, and download your resume as a PDF.</p>
+
+    <form th:action="@{/download}" method="post" id="resumeForm">
+        <div class="row">
+            <label>
+                Full Name
+                <input type="text" name="fullName" placeholder="Your name" required>
+            </label>
+
+            <label>
+                Email
+                <input type="email" name="email" placeholder="you@example.com" required>
+            </label>
+
+            <label>
+                Phone
+                <input type="tel" name="phone" placeholder="+91 98765 43210" required>
+            </label>
+        </div>
+
+        <label>
+            Select Template
+            <select name="template" required>
+                <option value="classic">Classic ATS</option>
+                <option value="modern">Modern ATS</option>
+                <option value="compact">Compact ATS</option>
+            </select>
+        </label>
+
+        <div class="field">
+            <span>Professional Summary</span>
+            <div class="toolbar" aria-label="Professional Summary formatting">
+                <button class="tool-button" type="button" data-command="bold" title="Bold">B</button>
+                <button class="tool-button" type="button" data-command="italic" title="Italic"><i>I</i></button>
+                <button class="tool-button" type="button" data-command="justifyLeft" title="Align left">L</button>
+                <button class="tool-button" type="button" data-command="justifyCenter" title="Align center">C</button>
+                <button class="tool-button" type="button" data-command="justifyRight" title="Align right">R</button>
+                <button class="tool-button" type="button" data-command="insertOrderedList" title="Ordered list">1.</button>
+                <button class="tool-button" type="button" data-command="insertUnorderedList" title="Unordered list">UL</button>
+            </div>
+            <div class="editor" contenteditable="true" data-name="summary" data-placeholder="Write a short summary about yourself" role="textbox" aria-multiline="true"></div>
+            <input type="hidden" name="summary" required>
+        </div>
+
+        <div class="field">
+            <span>Skills</span>
+            <div class="toolbar" aria-label="Skills formatting">
+                <button class="tool-button" type="button" data-command="bold" title="Bold">B</button>
+                <button class="tool-button" type="button" data-command="italic" title="Italic"><i>I</i></button>
+                <button class="tool-button" type="button" data-command="justifyLeft" title="Align left">L</button>
+                <button class="tool-button" type="button" data-command="justifyCenter" title="Align center">C</button>
+                <button class="tool-button" type="button" data-command="justifyRight" title="Align right">R</button>
+                <button class="tool-button" type="button" data-command="insertOrderedList" title="Ordered list">1.</button>
+                <button class="tool-button" type="button" data-command="insertUnorderedList" title="Unordered list">UL</button>
+            </div>
+            <div class="editor" contenteditable="true" data-name="skills" data-placeholder="Java, Spring Boot, HTML, CSS" role="textbox" aria-multiline="true"></div>
+            <input type="hidden" name="skills" required>
+        </div>
+
+        <div class="field">
+            <span>Experience</span>
+            <div class="toolbar" aria-label="Experience formatting">
+                <button class="tool-button" type="button" data-command="bold" title="Bold">B</button>
+                <button class="tool-button" type="button" data-command="italic" title="Italic"><i>I</i></button>
+                <button class="tool-button" type="button" data-command="justifyLeft" title="Align left">L</button>
+                <button class="tool-button" type="button" data-command="justifyCenter" title="Align center">C</button>
+                <button class="tool-button" type="button" data-command="justifyRight" title="Align right">R</button>
+                <button class="tool-button" type="button" data-command="insertOrderedList" title="Ordered list">1.</button>
+                <button class="tool-button" type="button" data-command="insertUnorderedList" title="Unordered list">UL</button>
+            </div>
+            <div class="editor" contenteditable="true" data-name="experience" data-placeholder="Describe your work experience or projects" role="textbox" aria-multiline="true"></div>
+            <input type="hidden" name="experience" required>
+        </div>
+
+        <div class="field">
+            <span>Education</span>
+            <div class="toolbar" aria-label="Education formatting">
+                <button class="tool-button" type="button" data-command="bold" title="Bold">B</button>
+                <button class="tool-button" type="button" data-command="italic" title="Italic"><i>I</i></button>
+                <button class="tool-button" type="button" data-command="justifyLeft" title="Align left">L</button>
+                <button class="tool-button" type="button" data-command="justifyCenter" title="Align center">C</button>
+                <button class="tool-button" type="button" data-command="justifyRight" title="Align right">R</button>
+                <button class="tool-button" type="button" data-command="insertOrderedList" title="Ordered list">1.</button>
+                <button class="tool-button" type="button" data-command="insertUnorderedList" title="Unordered list">UL</button>
+            </div>
+            <div class="editor" contenteditable="true" data-name="education" data-placeholder="Your degree, school, and year" role="textbox" aria-multiline="true"></div>
+            <input type="hidden" name="education" required>
+        </div>
+
+        <button class="submit-button" type="submit">Download PDF</button>
+    </form>
+</main>
+
+<script>
+    const form = document.getElementById('resumeForm');
+
+    document.querySelectorAll('.toolbar').forEach((toolbar) => {
+        toolbar.addEventListener('click', (event) => {
+            const button = event.target.closest('[data-command]');
+            if (!button) {
+                return;
+            }
+
+            const editor = toolbar.parentElement.querySelector('.editor');
+            editor.focus();
+            document.execCommand(button.dataset.command, false, null);
+        });
+    });
+
+    form.addEventListener('submit', (event) => {
+        let hasEmptyEditor = false;
+
+        document.querySelectorAll('.editor').forEach((editor) => {
+            const input = form.querySelector(`input[name="${editor.dataset.name}"]`);
+            const text = editor.textContent.trim();
+            input.value = text ? editor.innerHTML : '';
+
+            if (!text) {
+                hasEmptyEditor = true;
+                editor.focus();
+            }
+        });
+
+        if (hasEmptyEditor) {
+            event.preventDefault();
+            alert('Please fill all resume sections before downloading the PDF.');
+        }
+    });
+</script>
+</body>
+</html>
