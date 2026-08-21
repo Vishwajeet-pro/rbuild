@@ -35,10 +35,24 @@ public class ResumeController {
 			@RequestParam(defaultValue = "classic") String template) {
 
 		byte[] resume = pdfService.createResume(fullName, email, phone, summary, skills, experience, education, template);
+		String filename = buildFilename(fullName);
 
 		return ResponseEntity.ok()
-				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"resume.pdf\"")
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
 				.contentType(MediaType.APPLICATION_PDF)
 				.body(resume);
+	}
+
+	private String buildFilename(String fullName) {
+		String baseName = fullName == null ? "" : fullName.trim()
+				.toLowerCase()
+				.replaceAll("[^a-z0-9]+", "-")
+				.replaceAll("(^-|-$)", "");
+
+		if (baseName.isBlank()) {
+			return "resume.pdf";
+		}
+
+		return baseName + "-resume.pdf";
 	}
 }
