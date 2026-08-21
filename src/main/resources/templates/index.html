@@ -9,50 +9,151 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --page: #eef3f8;
+            --panel: #ffffff;
+            --ink: #111827;
+            --muted: #5d6878;
+            --line: #d6deea;
+            --accent: #1f6f68;
+            --accent-dark: #15544f;
+            --danger: #b42318;
+            --focus: rgba(31, 111, 104, 0.18);
+        }
+
         body {
             margin: 0;
             min-height: 100vh;
-            font-family: Arial, sans-serif;
-            background: #f3f6fb;
-            color: #1f2937;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--page);
+            color: var(--ink);
+            overflow-x: hidden;
+        }
+
+        button,
+        input,
+        select,
+        textarea {
+            font: inherit;
         }
 
         main {
-            width: min(980px, calc(100% - 32px));
+            width: min(1280px, calc(100vw - 32px));
             margin: 0 auto;
-            padding: 40px 0;
+            padding: 28px 0 36px;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: end;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 18px;
+        }
+
+        .topbar > * {
+            min-width: 0;
         }
 
         h1 {
-            margin: 0 0 8px;
-            font-size: 32px;
+            margin: 0 0 6px;
+            font-size: 30px;
+            line-height: 1.1;
         }
 
-        p {
-            margin: 0 0 28px;
-            color: #5b6472;
+        .intro {
+            max-width: 680px;
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.45;
+            overflow-wrap: anywhere;
+        }
+
+        .status-pill {
+            flex: 0 0 auto;
+            border: 1px solid #badbd7;
+            border-radius: 999px;
+            padding: 8px 12px;
+            color: var(--accent-dark);
+            background: #f0fbf8;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .workspace {
+            display: grid;
+            grid-template-columns: minmax(0, 1.02fr) minmax(360px, 0.88fr);
+            gap: 20px;
+            align-items: start;
+        }
+
+        form,
+        .preview-panel {
+            min-width: 0;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--panel);
+            box-shadow: 0 14px 32px rgba(17, 24, 39, 0.07);
         }
 
         form {
             display: grid;
             gap: 18px;
-            padding: 28px;
-            border: 1px solid #d9e0ea;
-            border-radius: 8px;
-            background: #ffffff;
-            box-shadow: 0 12px 30px rgba(31, 41, 55, 0.08);
+            padding: 22px;
         }
 
-        .row {
+        .section {
             display: grid;
+            gap: 12px;
+            min-width: 0;
+        }
+
+        .section-head {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 12px;
+            border-bottom: 1px solid #e7edf5;
+            padding-bottom: 8px;
+        }
+
+        h2 {
+            margin: 0;
+            font-size: 18px;
+            line-height: 1.25;
+        }
+
+        .hint {
+            min-width: 0;
+            margin: 0;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.4;
+            overflow-wrap: anywhere;
+            text-align: right;
+        }
+
+        .grid-2,
+        .grid-3 {
+            display: grid;
+            gap: 12px;
+            min-width: 0;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .grid-3 {
             grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 16px;
         }
 
         label,
         .field {
             display: grid;
-            gap: 8px;
+            gap: 7px;
+            min-width: 0;
+            font-size: 14px;
             font-weight: 700;
         }
 
@@ -60,195 +161,523 @@
         select,
         .editor {
             width: 100%;
-            border: 1px solid #cfd7e3;
+            min-width: 0;
+            border: 1px solid #cbd5e1;
             border-radius: 6px;
-            padding: 12px 14px;
-            font: inherit;
-            color: #111827;
+            padding: 11px 12px;
+            color: var(--ink);
             background: #ffffff;
         }
 
-        select {
-            appearance: auto;
-        }
-
-        .editor {
-            min-height: 116px;
-            font-weight: 400;
-            line-height: 1.45;
-            outline: none;
-            overflow-wrap: anywhere;
-        }
-
-        .editor:focus,
         input:focus,
-        select:focus {
-            border-color: #2563eb;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
+        select:focus,
+        .editor:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--focus);
         }
 
-        .editor:empty::before {
-            content: attr(data-placeholder);
-            color: #8b95a5;
+        .template-options {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
         }
 
-        .toolbar {
+        .template-card {
+            position: relative;
+            display: grid;
+            gap: 5px;
+            min-width: 0;
+            max-width: 100%;
+            border: 1px solid #cbd5e1;
+            border-radius: 7px;
+            padding: 12px;
+            cursor: pointer;
+            background: #ffffff;
+            overflow: hidden;
+        }
+
+        .template-card input {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .template-card span {
+            font-weight: 700;
+        }
+
+        .template-card small {
+            color: var(--muted);
+            line-height: 1.35;
+        }
+
+        .template-card:has(input:checked) {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--focus);
+            background: #f5fffc;
+        }
+
+        .formatting {
             display: flex;
             flex-wrap: wrap;
             gap: 6px;
-            padding: 8px;
-            border: 1px solid #d9e0ea;
-            border-radius: 6px;
-            background: #f8fafc;
         }
 
         .tool-button {
             display: inline-grid;
             place-items: center;
-            min-width: 34px;
+            width: 34px;
             height: 32px;
-            border: 1px solid #cfd7e3;
+            border: 1px solid #cbd5e1;
             border-radius: 5px;
-            padding: 0 9px;
-            font: inherit;
-            font-weight: 700;
-            color: #1f2937;
-            background: #ffffff;
+            padding: 0;
+            color: var(--ink);
+            background: #f8fafc;
             cursor: pointer;
+            font-weight: 700;
         }
 
-        .tool-button:hover {
-            background: #eaf1ff;
-            border-color: #9bb7ef;
+        .tool-button:hover,
+        .tool-button.is-active {
+            border-color: var(--accent);
+            background: #e8f7f4;
+        }
+
+        .editor {
+            min-height: 106px;
+            overflow-wrap: anywhere;
+            font-weight: 400;
+            line-height: 1.45;
+        }
+
+        .editor:empty::before {
+            content: attr(data-placeholder);
+            color: #8490a3;
+        }
+
+        .error {
+            display: none;
+            color: var(--danger);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        /*.field.is-invalid input,*/
+        /*.field.is-invalid .editor {*/
+        /*    border-color: var(--danger);*/
+        /*}*/
+
+        .field.is-invalid .error {
+            display: block;
+        }
+
+        .actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            border-top: 1px solid #e7edf5;
+            padding-top: 16px;
         }
 
         .submit-button {
-            justify-self: start;
             border: 0;
             border-radius: 6px;
-            padding: 13px 20px;
-            font: inherit;
-            font-weight: 700;
+            padding: 12px 18px;
             color: #ffffff;
-            background: #2563eb;
+            background: var(--accent);
             cursor: pointer;
+            font-weight: 700;
         }
 
         .submit-button:hover {
-            background: #1d4ed8;
+            background: var(--accent-dark);
         }
 
-        @media (max-width: 720px) {
-            .row {
+        .preview-panel {
+            position: sticky;
+            top: 18px;
+            padding: 18px;
+        }
+
+        .preview-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .preview-head h2 {
+            font-size: 17px;
+        }
+
+        .preview-head span {
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .resume-preview {
+            width: 100%;
+            min-height: 620px;
+            border: 1px solid #d9e0ea;
+            background: #ffffff;
+            padding: 34px;
+            color: #111827;
+            font-size: 13px;
+            line-height: 1.45;
+        }
+
+        .resume-preview.classic .preview-name,
+        .resume-preview.classic .preview-contact {
+            text-align: center;
+        }
+
+        .resume-preview.modern .preview-name,
+        .resume-preview.modern .preview-contact,
+        .resume-preview.compact .preview-name,
+        .resume-preview.compact .preview-contact {
+            text-align: left;
+        }
+
+        .resume-preview.modern .preview-name,
+        .resume-preview.modern .preview-section h3 {
+            color: #1f4e79;
+        }
+
+        .resume-preview.compact {
+            font-size: 12px;
+            padding: 28px;
+        }
+
+        .preview-name {
+            margin: 0;
+            font-size: 28px;
+            line-height: 1.1;
+        }
+
+        .resume-preview.compact .preview-name {
+            font-size: 24px;
+        }
+
+        .preview-contact {
+            margin: 7px 0 20px;
+            color: #374151;
+        }
+
+        .preview-section {
+            margin-top: 16px;
+        }
+
+        .preview-section h3 {
+            margin: 0 0 7px;
+            border-bottom: 1px solid currentColor;
+            padding-bottom: 4px;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .resume-preview.modern .preview-section h3 {
+            border-bottom-width: 2px;
+        }
+
+        .preview-content p {
+            margin: 0 0 7px;
+        }
+
+        .preview-content ul,
+        .preview-content ol {
+            margin: 0 0 7px 20px;
+            padding: 0;
+        }
+
+        .preview-content li {
+            margin-bottom: 3px;
+        }
+
+        @media (max-width: 980px) {
+            .workspace {
                 grid-template-columns: 1fr;
             }
 
-            form {
-                padding: 20px;
+            .preview-panel {
+                position: static;
+            }
+        }
+
+        @media (max-width: 720px) {
+            main {
+                width: min(300px, calc(100vw - 32px));
+                padding: 20px 0 28px;
+            }
+
+            .topbar,
+            .actions {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .section-head {
+                align-items: stretch;
+                flex-direction: column;
+                gap: 6px;
+            }
+
+            .hint {
+                text-align: left;
+            }
+
+            .status-pill,
+            .submit-button {
+                width: 100%;
+                text-align: center;
+            }
+
+            form,
+            .preview-panel {
+                padding: 16px;
+            }
+
+            .grid-2,
+            .grid-3,
+            .template-options {
+                grid-template-columns: 1fr;
+            }
+
+            .resume-preview {
+                min-height: 520px;
+                padding: 22px;
             }
         }
     </style>
 </head>
 <body>
 <main>
-    <h1>Resume Builder</h1>
-    <p>Enter your details, choose an ATS-friendly template, and download your resume as a PDF.</p>
-
-    <form th:action="@{/download}" method="post" id="resumeForm">
-        <div class="row">
-            <label>
-                Full Name
-                <input type="text" name="fullName" placeholder="Your name" required>
-            </label>
-
-            <label>
-                Email
-                <input type="email" name="email" placeholder="you@example.com" required>
-            </label>
-
-            <label>
-                Phone
-                <input type="tel" name="phone" placeholder="+91 98765 43210" required>
-            </label>
+    <div class="topbar">
+        <div>
+            <h1>Resume Builder</h1>
+            <p class="intro">Build a clean ATS-friendly resume, preview it as you type, and download a PDF when it is ready.</p>
         </div>
+        <div class="status-pill" id="completionStatus">0 of 7 sections ready</div>
+    </div>
 
-        <label>
-            Select Template
-            <select name="template" required>
-                <option value="classic">Classic ATS</option>
-                <option value="modern">Modern ATS</option>
-                <option value="compact">Compact ATS</option>
-            </select>
-        </label>
+    <div class="workspace">
+        <form th:action="@{/download}" method="post" id="resumeForm" novalidate>
+            <section class="section">
+                <div class="section-head">
+                    <h2>Contact</h2>
+                    <p class="hint">This appears at the top of the resume.</p>
+                </div>
+                <div class="grid-3">
+                    <label class="field" data-required="true">
+                        Full Name
+                        <input type="text" name="fullName" placeholder="Aarav Sharma" autocomplete="name">
+                        <!-- <span class="error">Enter your full name.</span> -->
+                    </label>
+                    <label class="field" data-required="true">
+                        Email
+                        <input type="email" name="email" placeholder="aarav@example.com" autocomplete="email">
+                        <!-- <span class="error">Enter a valid email.</span> -->
+                    </label>
+                    <label class="field" data-required="true">
+                        Phone
+                        <input type="tel" name="phone" placeholder="+91 98765 43210" autocomplete="tel">
+                        <!-- <span class="error">Enter your phone number.</span> -->
+                    </label>
+                </div>
+            </section>
 
-        <div class="field">
-            <span>Professional Summary</span>
-            <div class="toolbar" aria-label="Professional Summary formatting">
-                <button class="tool-button" type="button" data-command="bold" title="Bold">B</button>
-                <button class="tool-button" type="button" data-command="italic" title="Italic"><i>I</i></button>
-                <button class="tool-button" type="button" data-command="justifyLeft" title="Align left">L</button>
-                <button class="tool-button" type="button" data-command="justifyCenter" title="Align center">C</button>
-                <button class="tool-button" type="button" data-command="justifyRight" title="Align right">R</button>
-                <button class="tool-button" type="button" data-command="insertOrderedList" title="Ordered list">1.</button>
-                <button class="tool-button" type="button" data-command="insertUnorderedList" title="Unordered list">UL</button>
+            <section class="section">
+                <div class="section-head">
+                    <h2>Template</h2>
+                    <p class="hint">The preview updates instantly.</p>
+                </div>
+                <div class="template-options" role="radiogroup" aria-label="Resume template">
+                    <label class="template-card">
+                        <input type="radio" name="template" value="classic" checked>
+                        <span>Classic ATS</span>
+                        <small>Centered header, simple black section rules.</small>
+                    </label>
+                    <label class="template-card">
+                        <input type="radio" name="template" value="modern">
+                        <span>Modern ATS</span>
+                        <small>Left aligned with a restrained blue accent.</small>
+                    </label>
+                    <label class="template-card">
+                        <input type="radio" name="template" value="compact">
+                        <span>Compact ATS</span>
+                        <small>Tighter spacing for more content on one page.</small>
+                    </label>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-head">
+                    <h2>Summary</h2>
+                    <p class="hint">Keep it to two or three specific lines.</p>
+                </div>
+                <div class="field" data-required="true">
+                    <div class="formatting" aria-label="Professional Summary formatting">
+                        <button class="tool-button" type="button" data-command="bold" title="Bold">B</button>
+                        <button class="tool-button" type="button" data-command="italic" title="Italic">I</button>
+                        <button class="tool-button" type="button" data-command="insertUnorderedList" title="Bullet list">-</button>
+                        <button class="tool-button" type="button" data-command="insertOrderedList" title="Numbered list">1</button>
+                    </div>
+                    <div class="editor" contenteditable="true" data-name="summary" data-placeholder="Backend developer with 3 years of experience building Java services." role="textbox" aria-multiline="true"></div>
+                    <input type="hidden" name="summary">
+                    <span class="error">Add a short professional summary.</span>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-head">
+                    <h2>Skills</h2>
+                    <p class="hint">Use skills recruiters search for.</p>
+                </div>
+                <div class="field" data-required="true">
+                    <div class="formatting" aria-label="Skills formatting">
+                        <button class="tool-button" type="button" data-command="bold" title="Bold">B</button>
+                        <button class="tool-button" type="button" data-command="insertUnorderedList" title="Bullet list">-</button>
+                    </div>
+                    <div class="editor" contenteditable="true" data-name="skills" data-placeholder="Java, Spring Boot, REST APIs, SQL, HTML, CSS" role="textbox" aria-multiline="true"></div>
+                    <input type="hidden" name="skills">
+                    <span class="error">Add at least a few relevant skills.</span>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-head">
+                    <h2>Experience</h2>
+                    <p class="hint">Separate the role details from achievement bullets.</p>
+                </div>
+                <div class="grid-3">
+                    <label class="field">
+                        Job Title
+                        <input type="text" name="experienceTitle" placeholder="Software Engineer">
+                    </label>
+                    <label class="field">
+                        Company
+                        <input type="text" name="experienceCompany" placeholder="Nandlal Tech">
+                    </label>
+                    <label class="field">
+                        Dates
+                        <input type="text" name="experienceDates" placeholder="Jan 2024 - Present">
+                    </label>
+                </div>
+                <div class="field" data-required="true">
+                    <div class="formatting" aria-label="Experience bullet formatting">
+                        <button class="tool-button" type="button" data-command="bold" title="Bold">B</button>
+                        <button class="tool-button" type="button" data-command="insertUnorderedList" title="Bullet list">-</button>
+                    </div>
+                    <div class="editor" contenteditable="true" data-name="experienceBullets" data-placeholder="Built REST APIs that reduced manual reporting work by 40%." role="textbox" aria-multiline="true"></div>
+                    <input type="hidden" name="experience">
+                    <span class="error">Add at least one experience or project achievement.</span>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-head">
+                    <h2>Education</h2>
+                    <p class="hint">Add degree, institution, and year.</p>
+                </div>
+                <div class="grid-3">
+                    <label class="field" data-required="true">
+                        Degree
+                        <input type="text" name="degree" placeholder="B.Tech Computer Science">
+                        <!-- <span class="error">Enter your degree.</span> -->
+                    </label>
+                    <label class="field" data-required="true">
+                        School
+                        <input type="text" name="school" placeholder="Delhi Technical University">
+                        <!-- <span class="error">Enter your school.</span> -->
+                    </label>
+                    <label class="field">
+                        Year
+                        <input type="text" name="educationYear" placeholder="2026">
+                    </label>
+                </div>
+                <div class="field">
+                    Details
+                    <div class="editor" contenteditable="true" data-name="educationDetails" data-placeholder="Relevant coursework, honors, or certifications" role="textbox" aria-multiline="true"></div>
+                    <input type="hidden" name="education">
+                </div>
+            </section>
+
+            <div class="actions">
+                <p class="hint">Review the preview before downloading. Empty required fields are shown inline.</p>
+                <button class="submit-button" type="submit">Download PDF</button>
             </div>
-            <div class="editor" contenteditable="true" data-name="summary" data-placeholder="Write a short summary about yourself" role="textbox" aria-multiline="true"></div>
-            <input type="hidden" name="summary" required>
-        </div>
+        </form>
 
-        <div class="field">
-            <span>Skills</span>
-            <div class="toolbar" aria-label="Skills formatting">
-                <button class="tool-button" type="button" data-command="bold" title="Bold">B</button>
-                <button class="tool-button" type="button" data-command="italic" title="Italic"><i>I</i></button>
-                <button class="tool-button" type="button" data-command="justifyLeft" title="Align left">L</button>
-                <button class="tool-button" type="button" data-command="justifyCenter" title="Align center">C</button>
-                <button class="tool-button" type="button" data-command="justifyRight" title="Align right">R</button>
-                <button class="tool-button" type="button" data-command="insertOrderedList" title="Ordered list">1.</button>
-                <button class="tool-button" type="button" data-command="insertUnorderedList" title="Unordered list">UL</button>
+        <aside class="preview-panel" aria-label="Live resume preview">
+            <div class="preview-head">
+                <h2>Live Preview</h2>
+                <span id="activeTemplate">Classic ATS</span>
             </div>
-            <div class="editor" contenteditable="true" data-name="skills" data-placeholder="Java, Spring Boot, HTML, CSS" role="textbox" aria-multiline="true"></div>
-            <input type="hidden" name="skills" required>
-        </div>
+            <article class="resume-preview classic" id="resumePreview">
+                <h2 class="preview-name" id="previewName">Your Name</h2>
+                <div class="preview-contact" id="previewContact">you@example.com | +91 98765 43210</div>
 
-        <div class="field">
-            <span>Experience</span>
-            <div class="toolbar" aria-label="Experience formatting">
-                <button class="tool-button" type="button" data-command="bold" title="Bold">B</button>
-                <button class="tool-button" type="button" data-command="italic" title="Italic"><i>I</i></button>
-                <button class="tool-button" type="button" data-command="justifyLeft" title="Align left">L</button>
-                <button class="tool-button" type="button" data-command="justifyCenter" title="Align center">C</button>
-                <button class="tool-button" type="button" data-command="justifyRight" title="Align right">R</button>
-                <button class="tool-button" type="button" data-command="insertOrderedList" title="Ordered list">1.</button>
-                <button class="tool-button" type="button" data-command="insertUnorderedList" title="Unordered list">UL</button>
-            </div>
-            <div class="editor" contenteditable="true" data-name="experience" data-placeholder="Describe your work experience or projects" role="textbox" aria-multiline="true"></div>
-            <input type="hidden" name="experience" required>
-        </div>
-
-        <div class="field">
-            <span>Education</span>
-            <div class="toolbar" aria-label="Education formatting">
-                <button class="tool-button" type="button" data-command="bold" title="Bold">B</button>
-                <button class="tool-button" type="button" data-command="italic" title="Italic"><i>I</i></button>
-                <button class="tool-button" type="button" data-command="justifyLeft" title="Align left">L</button>
-                <button class="tool-button" type="button" data-command="justifyCenter" title="Align center">C</button>
-                <button class="tool-button" type="button" data-command="justifyRight" title="Align right">R</button>
-                <button class="tool-button" type="button" data-command="insertOrderedList" title="Ordered list">1.</button>
-                <button class="tool-button" type="button" data-command="insertUnorderedList" title="Unordered list">UL</button>
-            </div>
-            <div class="editor" contenteditable="true" data-name="education" data-placeholder="Your degree, school, and year" role="textbox" aria-multiline="true"></div>
-            <input type="hidden" name="education" required>
-        </div>
-
-        <button class="submit-button" type="submit">Download PDF</button>
-    </form>
+                <section class="preview-section">
+                    <h3>Professional Summary</h3>
+                    <div class="preview-content" id="previewSummary"><p>Your summary will appear here.</p></div>
+                </section>
+                <section class="preview-section">
+                    <h3>Skills</h3>
+                    <div class="preview-content" id="previewSkills"><p>Java, Spring Boot, HTML, CSS</p></div>
+                </section>
+                <section class="preview-section">
+                    <h3>Experience</h3>
+                    <div class="preview-content" id="previewExperience"><p><strong>Job Title</strong> - Company, Dates</p><ul><li>Your strongest achievement appears here.</li></ul></div>
+                </section>
+                <section class="preview-section">
+                    <h3>Education</h3>
+                    <div class="preview-content" id="previewEducation"><p><strong>Degree</strong> - School, Year</p></div>
+                </section>
+            </article>
+        </aside>
+    </div>
 </main>
 
 <script>
     const form = document.getElementById('resumeForm');
+    const editors = Array.from(document.querySelectorAll('.editor'));
+    const fields = {
+        fullName: form.elements.fullName,
+        email: form.elements.email,
+        phone: form.elements.phone,
+        experienceTitle: form.elements.experienceTitle,
+        experienceCompany: form.elements.experienceCompany,
+        experienceDates: form.elements.experienceDates,
+        degree: form.elements.degree,
+        school: form.elements.school,
+        educationYear: form.elements.educationYear
+    };
 
-    document.querySelectorAll('.toolbar').forEach((toolbar) => {
+    const preview = {
+        page: document.getElementById('resumePreview'),
+        name: document.getElementById('previewName'),
+        contact: document.getElementById('previewContact'),
+        summary: document.getElementById('previewSummary'),
+        skills: document.getElementById('previewSkills'),
+        experience: document.getElementById('previewExperience'),
+        education: document.getElementById('previewEducation'),
+        activeTemplate: document.getElementById('activeTemplate'),
+        completionStatus: document.getElementById('completionStatus')
+    };
+
+    const templateLabels = {
+        classic: 'Classic ATS',
+        modern: 'Modern ATS',
+        compact: 'Compact ATS'
+    };
+
+    document.querySelectorAll('.formatting').forEach((toolbar) => {
         toolbar.addEventListener('click', (event) => {
             const button = event.target.closest('[data-command]');
             if (!button) {
@@ -258,28 +687,151 @@
             const editor = toolbar.parentElement.querySelector('.editor');
             editor.focus();
             document.execCommand(button.dataset.command, false, null);
+            updatePreview();
         });
     });
+
+    form.addEventListener('input', updatePreview);
+    form.addEventListener('change', updatePreview);
 
     form.addEventListener('submit', (event) => {
-        let hasEmptyEditor = false;
-
-        document.querySelectorAll('.editor').forEach((editor) => {
-            const input = form.querySelector(`input[name="${editor.dataset.name}"]`);
-            const text = editor.textContent.trim();
-            input.value = text ? editor.innerHTML : '';
-
-            if (!text) {
-                hasEmptyEditor = true;
-                editor.focus();
-            }
-        });
-
-        if (hasEmptyEditor) {
-            event.preventDefault();
-            alert('Please fill all resume sections before downloading the PDF.');
-        }
+        syncHiddenFields();
+        validateForm();
     });
+
+    function updatePreview() {
+        syncHiddenFields();
+
+        const template = new FormData(form).get('template') || 'classic';
+        preview.page.className = `resume-preview ${template}`;
+        preview.activeTemplate.textContent = templateLabels[template];
+
+        preview.name.textContent = fields.fullName.value.trim() || 'Your Name';
+        preview.contact.textContent = [
+            fields.email.value.trim() || 'you@example.com',
+            fields.phone.value.trim() || '+91 98765 43210'
+        ].join(' | ');
+
+        preview.summary.innerHTML = editorHtml('summary', '<p>Your summary will appear here.</p>');
+        preview.skills.innerHTML = editorHtml('skills', '<p>Java, Spring Boot, HTML, CSS</p>');
+        preview.experience.innerHTML = form.elements.experience.value || '<p><strong>Job Title</strong> - Company, Dates</p><ul><li>Your strongest achievement appears here.</li></ul>';
+        preview.education.innerHTML = form.elements.education.value || '<p><strong>Degree</strong> - School, Year</p>';
+        updateCompletion();
+        refreshValidation();
+    }
+
+    function syncHiddenFields() {
+        form.elements.summary.value = editorHtml('summary', '');
+        form.elements.skills.value = editorHtml('skills', '');
+        form.elements.experience.value = buildExperienceHtml();
+        form.elements.education.value = buildEducationHtml();
+    }
+
+    function buildExperienceHtml() {
+        const title = escapeHtml(fields.experienceTitle.value.trim());
+        const company = escapeHtml(fields.experienceCompany.value.trim());
+        const dates = escapeHtml(fields.experienceDates.value.trim());
+        const bullets = editorHtml('experienceBullets', '');
+        const headingParts = [company, dates].filter(Boolean).join(', ');
+
+        let html = '';
+        if (title || headingParts) {
+            html += `<p>${title ? `<strong>${title}</strong>` : ''}${title && headingParts ? ' - ' : ''}${headingParts}</p>`;
+        }
+
+        return html + bullets;
+    }
+
+    function buildEducationHtml() {
+        const degree = escapeHtml(fields.degree.value.trim());
+        const school = escapeHtml(fields.school.value.trim());
+        const year = escapeHtml(fields.educationYear.value.trim());
+        const details = editorHtml('educationDetails', '');
+        const schoolParts = [school, year].filter(Boolean).join(', ');
+
+        let html = '';
+        if (degree || schoolParts) {
+            html += `<p>${degree ? `<strong>${degree}</strong>` : ''}${degree && schoolParts ? ' - ' : ''}${schoolParts}</p>`;
+        }
+
+        return html + details;
+    }
+
+    function editorHtml(name, fallback) {
+        const editor = document.querySelector(`[data-name="${name}"]`);
+        if (!editor || !editor.textContent.trim()) {
+            return fallback;
+        }
+
+        return editor.innerHTML;
+    }
+
+    function validateForm() {
+        // Refresh validation state for all required fields, then focus the
+        // first invalid field (if any). This keeps `.error` visibility
+        // consistent with live validation as the user types.
+        refreshValidation();
+
+        const firstInvalidField = document.querySelector('[data-required="true"].is-invalid');
+        if (firstInvalidField) {
+            const firstInvalidInput = firstInvalidField.querySelector('input:not([type="hidden"]), .editor');
+            if (firstInvalidInput) {
+                firstInvalidInput.focus();
+                firstInvalidInput.scrollIntoView({ block: 'center', behavior: 'smooth' });
+            }
+            return false;
+        }
+
+        return true;
+    }
+
+    function refreshValidation() {
+        document.querySelectorAll('[data-required="true"]').forEach((field) => {
+            const input = field.querySelector('input:not([type="hidden"]), .editor');
+            const isEmail = input && input.name === 'email';
+            let value = '';
+
+            if (!input) {
+                value = '';
+            } else if (input.textContent !== undefined) {
+                value = input.textContent.trim();
+            } else {
+                value = input.value.trim();
+            }
+
+            const invalid = !value || (isEmail && typeof input.checkValidity === 'function' && !input.checkValidity());
+            field.classList.toggle('is-invalid', invalid);
+        });
+    }
+
+    function updateCompletion() {
+        const complete = [
+            fields.fullName.value.trim(),
+            fields.email.value.trim() && fields.email.checkValidity(),
+            fields.phone.value.trim(),
+            textForEditor('summary'),
+            textForEditor('skills'),
+            textForEditor('experienceBullets'),
+            fields.degree.value.trim() && fields.school.value.trim()
+        ].filter(Boolean).length;
+
+        preview.completionStatus.textContent = `${complete} of 7 sections ready`;
+    }
+
+    function textForEditor(name) {
+        const editor = document.querySelector(`[data-name="${name}"]`);
+        return editor ? editor.textContent.trim() : '';
+    }
+
+    function escapeHtml(value) {
+        return value
+            .replaceAll('&', '&amp;')
+            .replaceAll('<', '&lt;')
+            .replaceAll('>', '&gt;')
+            .replaceAll('"', '&quot;');
+    }
+
+    updatePreview();
 </script>
 </body>
 </html>
